@@ -55,8 +55,8 @@ router.put("/update/:id", async(req,res)=>{
 router.get('/view/:id',async(req,res)=>{
     try{
         let id = req.params.id;
-        const vehicle = await Vehicle.find({vehicle_number : id})
-        res.status(200).send({data : vehicle});
+        const deliveryBoy = await DeliveryBoy.find({Id : id})
+        res.status(200).send({data : deliveryBoy});
 
     }catch(err){
         res.status(500).send({data : err});
@@ -70,8 +70,7 @@ router.delete('/remove/:id',async(req,res)=>{
 
     try{
         var id = req.params.id;
-        console.log(id);
-        const updateData = await Vehicle.findByIdAndDelete(id)
+        const updateData = await DeliveryBoy.findByIdAndDelete(id)
         res.status(200).send({data : updateData});
     
 
