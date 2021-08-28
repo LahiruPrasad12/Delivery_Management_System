@@ -17,4 +17,14 @@ router.post('/add',async(req,res)=>{
     }
 })
 
+
+router.get('/view', async(req,res)=>{
+    try{
+        const allVehicles = await Vehicle.find();
+        res.status(200).send({data : allVehicles});
+    }catch(err){
+        res.status(500).send({data : err});
+    }
+})
+
 module.exports = router;
