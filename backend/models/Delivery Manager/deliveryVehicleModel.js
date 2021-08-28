@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const deliveryVehicle = new mongoose.Schema({
-    vehicle_number : { type: Number, required : true },
-    vehicle_name : { type: String, required : true },
-    vehicle_owner : { type: String, required : true },
-    owner_contactNumber : { type: String, required : true },
-    owner_NIC : {type: String, required : true }
+    vehicle_number : { type: String, required : true },
+    owner_name : { type: String, required : true },
+    owner_contactNumber : { type: Number, required : true },
+    owner_NIC : {type: String, required : true },
+    owner_mail : {type: String, required : true }
    
 });
 

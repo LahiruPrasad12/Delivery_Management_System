@@ -3,9 +3,10 @@ const Vehicle = require("../../models/Delivery Manager/deliveryVehicleModel");
 
 router.post('/add',async(req,res)=>{
     try{
-        const {name} = req.body;
+        const {vehicle_number,owner_name,owner_contactNumber,owner_NIC,owner_mail} = req.body;
+       
         const newVehicle = new Vehicle({
-            name
+            vehicle_number,owner_name,owner_contactNumber,owner_NIC,owner_mail
         });
 
         const savedVehicle = await newVehicle.save();
