@@ -39,3 +39,4 @@ connection.once("open", ()=>{
 
 /*---------------------------------------connect to mongoDB-------------------------------------------*/
 app.use("/vehicle", require("./routes/Delivery Manager/deliveryVehicleRoutes"));
+app.use("/DeliveryBoy", require("./routes/Delivery Manager/deliveryBoyRoutes"));
