@@ -39,12 +39,12 @@ router.put("/update/:id", async(req,res)=>{
         console.log(_id)
         const {vehicle_number,owner_name,owner_contactNumber,owner_NIC,owner_mail} = req.body;
 
-        const updateVehicle = new Vehicle({
+        const updateBoy = new DeliveryBoy({
             _id,vehicle_number,owner_name,owner_contactNumber,owner_NIC,owner_mail
         });
 
-        await Vehicle.findByIdAndUpdate(_id,updateVehicle)
-        res.status(200).send({data : updateVehicle});
+        await DeliveryBoy.findByIdAndUpdate(_id,updateBoy)
+        res.status(200).send({data : updateBoy});
              
     }catch(err){
         res.status(500).send({data : err});
