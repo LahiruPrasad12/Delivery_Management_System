@@ -21,7 +21,7 @@ app.listen(PORT,()=>{
 
 
 /*---------------------------------------connect to mongoDB-------------------------------------------*/
-    //Type 01
+
     const URL= process.env.MONGO_CONNECT;
 
     mongoose.connect(URL,{
@@ -34,3 +34,7 @@ app.listen(PORT,()=>{
     connection.once("open", ()=>{
         console.log("connection success")
     })
+
+
+/*---------------------------------------connect to mongoDB-------------------------------------------*/
+app.use("/vehicle", require("./routes/Delivery Manager/deliveryVehicleRoutes"));
