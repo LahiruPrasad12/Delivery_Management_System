@@ -36,11 +36,10 @@ router.get('/view', async(req,res)=>{
 router.put("/update/:id", async(req,res)=>{
     try{
         let _id = req.params.id;
-        console.log(_id)
-        const {vehicle_number,owner_name,owner_contactNumber,owner_NIC,owner_mail} = req.body;
+        const {Id,fName,lName,mobile,mail,NIC} = req.body;
 
         const updateBoy = new DeliveryBoy({
-            _id,vehicle_number,owner_name,owner_contactNumber,owner_NIC,owner_mail
+           _id, Id,fName,lName,mobile,mail,NIC
         });
 
         await DeliveryBoy.findByIdAndUpdate(_id,updateBoy)
