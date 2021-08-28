@@ -21,19 +21,20 @@ app.listen(PORT,()=>{
 
 
 /*---------------------------------------connect to mongoDB-------------------------------------------*/
+//connect to mongoDB
+const URL= process.env.MONGO_CONNECT;
 
-    const URL= process.env.MONGO_CONNECT;
+mongoose.connect(URL,{
+    useCreateIndex:true,
+    useNewUrlParser:true,
+    useUnifiedTopology:true,
+    useFindAndModify:false
 
-    mongoose.connect(URL,{
-        
-        useNewUrlParser:true,
-        useUnifiedTopology:true,
-       
-    })
-    const connection =mongoose.connection;
-    connection.once("open", ()=>{
-        console.log("connection success")
-    })
+})
+const connection =mongoose.connection;
+connection.once("open", ()=>{
+    console.log("connection success")
+})
 
 
 /*---------------------------------------connect to mongoDB-------------------------------------------*/
