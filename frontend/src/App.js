@@ -1,22 +1,19 @@
 
 
+import {BrowserRouter, Switch, Route} from "react-router-dom";
+import Home from './Delivery Manager/Home'
+import Test from './Delivery Manager/Test1'
+import Topnav from './Delivery Manager/layout/TopNav'
+import Sidenav from './Delivery Manager/layout/SideNav'
+import AddDeleiveryBoy from './Delivery Manager/Delivery Boy/AddDeliveryBoy'
+
 function App() {
   return (
-    <div>
-<p>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-    Link with href
-  </a>
-  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Button with data-bs-target
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-  </div>
-</div>
-    </div>
+    <BrowserRouter>
+        <Route exact path = "/"><Topnav/><Sidenav/><Home/></Route>
+        <Route exact path = "/delivery"><Topnav/><Sidenav/><AddDeleiveryBoy/></Route>
+        <Route exact path = "/t"><Test/></Route>
+    </BrowserRouter>
   );
 }
 
