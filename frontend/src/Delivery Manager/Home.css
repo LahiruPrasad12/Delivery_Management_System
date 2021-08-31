@@ -58,4 +58,11 @@ div.content {
 
 .Edit{
   color: white;
+  background-color: transparent;
+  border: none;
+}
+
+#deletePopUp{
+  float: right;
+  margin-bottom: 20px;
 }
