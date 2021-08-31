@@ -2,19 +2,27 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import SoloAlert from 'soloalert'
+import validation from 'validator'
+
 
 export default function ViewAllDeliveryBoys() {
 
   const [staff, setStaff] = useState([]);
   const [selectStaff, setSelectStaff] = useState([]);
   const [status, setStatus] = useState(true);
-
-
   const [btnStatus1, setbtnStatus1] = useState(false)
   const [btnStatus2, setbtnStatus2] = useState(true)
+  const [updateBTnStatus, setupdateBTnStatus] = useState(true)
 
+  const [fName, setFname] = useState("");
+  const [lName, setLname] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [NIC, setNIC] = useState("");
+  const [mail, setMail] = useState("");
+  const [Id, setID] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
-
+  //This function used to get all users
   useEffect(() => {
 
     async function getAgent() {
@@ -30,16 +38,27 @@ export default function ViewAllDeliveryBoys() {
   })
 
 
+
+  //This function used to get specific user data
   function getdata(data) {
     setbtnStatus1(false)
     setbtnStatus2(true)
     setStatus(true)
     setSelectStaff(data)
+    setID(data.Id)
+    setFname(data.fName)
+    setLname(data.lName)
+    setMobile(data.mobile)
+    setNIC(data.NIC)
+    setMail(data.mail)
   }
 
 
+
+
+  //This function is used to delete specific user
   function deleteUser() {
-    
+
     SoloAlert.confirm({
 
       title: "Confirm Delete",
@@ -48,54 +67,102 @@ export default function ViewAllDeliveryBoys() {
       useTransparency: true,
       onOk: async function () {
 
-        try{
+        try {
           const result = await (await axios.delete(`http://localhost:5000/DeliveryBoy/remove/${selectStaff._id}`)).status
           console.log(result)
-          
-          if(result===200){
+
+          if (result === 200) {
             SoloAlert.alert({
               title: "Welcome!",
               body: "Deletion is successful",
               icon: "success",
               theme: "dark",
               useTransparency: true,
-              onOk: function () { 
+              onOk: function () {
                 window.location = "/viewStaff"
               },
-              
+
             });
-          }else{
-            SoloAlert.alert({
-              title: "Oops!",
-              body: "Something went wrong",
-              icon: "warning",
-              theme: "dark",
-              useTransparency: true,
-              onOk: function () { 
-               
-              },
-              
-            });       
           }
-        }catch(err){
+        } catch (err) {
           SoloAlert.alert({
             title: "Oops!",
             body: "Something went wrong",
             icon: "error",
             theme: "dark",
             useTransparency: true,
-            onOk: function () { 
-             
+            onOk: function () {
+
             },
-            
+
           });
         }
       },
-      onCancel: function () { },
+      onCancel: function () {
+        SoloAlert.alert({
+          title: "Oops!",
+          body: "You canceled delete request",
+          icon: "warning",
+          theme: "dark",
+          useTransparency: true,
+          onOk: function () {
+
+          },
+
+        });
+      },
 
     })
   }
 
+  async function updateUser() {
+    setLoading(true);
+    try {
+      const updatedMember = {
+        Id,
+        fName,
+        lName,
+        mobile,
+        mail,
+        NIC
+      }
+
+      if (!validation.isEmail(mail)) {
+        SoloAlert.alert({
+          title: "Oops!",
+          body: "Please enter valid mail address",
+          icon: "warning",
+          theme: "dark",
+          useTransparency: true,
+          onOk: function () {
+
+          },
+
+        });
+      } else {
+        const result = await (await axios.put(`http://localhost:5000/DeliveryBoy/update/${selectStaff._id}`, updatedMember)).status;
+
+        if (result === 200) {
+          SoloAlert.alert({
+            title: "Welcome!",
+            body: "User updated successfully",
+            icon: "success",
+            theme: "dark",
+            useTransparency: true,
+            onOk: function () {
+              window.location = "/viewStaff"
+            },
+          });
+        }
+      }
+
+    } catch (err) {
+      alert(err.message)
+    }
+    setLoading(false);
+  }
+
+  //This method used to allow user details edit
   function editeUser() {
     setStatus(false)
     setbtnStatus1(true)
@@ -120,21 +187,26 @@ export default function ViewAllDeliveryBoys() {
 
 
             <div class="modal-body">
-              <form>
+              <form class="was-validated">
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.fName} readOnly={status} />
+                  <input type="text" class="form-control" id="floatingInput" defaultValue={selectStaff.fName} readOnly={status} required
+                    onChange={(e) => { setFname(e.target.value); }} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.lName} readOnly={status} />
+                  <input type="text" class="form-control" id="floatingInput" defaultValue={selectStaff.lName} readOnly={status} required
+                    onChange={(e) => { setLname(e.target.value); }} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.NIC} readOnly={status} />
+                  <input type="text" class="form-control" id="floatingInput" defaultValue={selectStaff.mobile} readOnly={status} required
+                    onChange={(e) => { setMobile(e.target.value); }} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.mail} readOnly={status} />
+                  <input type="email" class="form-control" id="floatingInput" defaultValue={selectStaff.mail} readOnly={status} required
+                    onChange={(e) => { setMail(e.target.value); }} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.mobile} readOnly={status} />
+                  <input type="text" class="form-control" id="floatingInput" defaultValue={selectStaff.NIC} readOnly={status} required
+                    onChange={(e) => { setNIC(e.target.value); }} />
                 </div>
               </form>
             </div>
@@ -145,7 +217,8 @@ export default function ViewAllDeliveryBoys() {
 
             <div class="modal-footer" hidden={btnStatus2}>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger"><i class="fa fa-wrench"></i>  UPDATE</button>
+              <button type="button" class="btn btn-danger" onClick={(e) => { updateUser() }}
+              disabled={isLoading} ><i class="fa fa-wrench"></i>  {isLoading ? 'Updating..' : 'UPDATE'}</button>
             </div>
           </div>
         </div>
