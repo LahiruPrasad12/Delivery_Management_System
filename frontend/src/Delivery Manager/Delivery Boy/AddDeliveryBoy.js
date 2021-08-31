@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import "../Home.css"
 import axios from 'axios';
+import SoloAlert from 'soloalert'
 
 export default function AddDeliveryBoy() {
 
@@ -30,7 +31,16 @@ export default function AddDeliveryBoy() {
 
             const data = await axios.post("http://localhost:5000/DeliveryBoy/add", newStaff)
             if (data.status === 200) {
-                window.location = "/"
+                SoloAlert.alert({
+                    title: "Welcome!",
+                    body: "User added successfully",
+                    icon: "success",
+                    theme: "dark",
+                    useTransparency: true,
+                    onOk: function () {
+                      window.location = "/viewStaff"
+                    },
+                  });
             }else{
                 alert("Something went wrong")
             }

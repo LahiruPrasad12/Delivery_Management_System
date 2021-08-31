@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import SoloAlert from 'soloalert'
 import validation from 'validator'
+import jspdf from 'jspdf'
+import "jspdf-autotable"
 
 
 export default function ViewAllDeliveryBoys() {
@@ -24,10 +26,12 @@ export default function ViewAllDeliveryBoys() {
 
   const [search, setsearch] = useState("");
   const [filtered, setfiltered] = useState([]);
-  //This function used to get all users
+
+
+  //This useEffect function used to get all user's data
   useEffect(() => {
 
-    async function getAgent() {
+    async function getStaff() {
       try {
         const result = await (await axios.get("http://localhost:5000/DeliveryBoy/view")).data.data
         setStaff(result);
@@ -35,17 +39,18 @@ export default function ViewAllDeliveryBoys() {
         alert(err)
       }
     }
-    getAgent();
+    getStaff();
 
   })
 
 
-
-  useEffect(() => { //search funtion
+  //This useEffect method is used to perform a searching function
+  useEffect(() => {
     setfiltered(
-      //filtering the inventory array to only contain objects that match with the seach term and save in the FILTERED useState 
       staff.filter(items => {
         return items.fName.toLowerCase().includes(search.toLowerCase())
+          || items.lName.toLowerCase().includes(search.toLowerCase())
+          || items.Id.toLowerCase().includes(search.toLowerCase())
           || items.NIC.toLowerCase().includes(search.toLowerCase())
       })
     )
@@ -129,6 +134,10 @@ export default function ViewAllDeliveryBoys() {
     })
   }
 
+
+
+
+  //This function is used to update user data
   async function updateUser() {
     setLoading(true);
     try {
@@ -176,12 +185,44 @@ export default function ViewAllDeliveryBoys() {
     setLoading(false);
   }
 
-  //This method used to allow user details edit
+
+  //This method used to edit user details
   function editeUser() {
     setStatus(false)
     setbtnStatus1(true)
     setbtnStatus2(false)
   }
+
+
+
+  //This function used to generate a pdf
+  function generatePDF(tickets){
+
+    const doc = new jspdf();
+    const tableColumn = ["User ID","First Name", "Last Name", "Mail Address", "Mobile Number", "NIC"];
+    const tableRows = [];
+
+    tickets.slice(0).reverse().map(ticket => {
+        const ticketData = [
+            ticket.Id,
+            ticket.fName,
+            ticket.lName,
+            ticket.mail,
+            ticket.mobile,
+            ticket.NIC,
+        ];
+        tableRows.push(ticketData);
+    });
+
+    doc.autoTable(tableColumn, tableRows, { styles: { fontSize: 8 }, startY: 35 });
+    const date = Date().split(" ");
+    const dateStr = date[1] + "-" + date[2] + "-" + date[3];
+    doc.text("Delivery-Staff-Report", 14, 15).setFontSize(12);
+    doc.text(`Report Genarated Date - ${dateStr} `, 14, 23);
+    doc.save(`Delivery-Staff-Report_${dateStr}.pdf`);
+
+  }
+
 
 
 
@@ -232,7 +273,7 @@ export default function ViewAllDeliveryBoys() {
             <div class="modal-footer" hidden={btnStatus2}>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="button" class="btn btn-danger" onClick={(e) => { updateUser() }}
-              disabled={isLoading} ><i class="fa fa-wrench"></i>  {isLoading ? 'Updating..' : 'UPDATE'}</button>
+                disabled={isLoading} ><i class="fa fa-wrench"></i>  {isLoading ? 'Updating..' : 'UPDATE'}</button>
             </div>
           </div>
         </div>
@@ -246,11 +287,11 @@ export default function ViewAllDeliveryBoys() {
       <nav className="navbar bg-white">
         <div className="container-fluid">
           <h3>VIEW-DELIVERY-BOYS</h3>
-          <button type="button" className="btn btn-warning" id="pdfButton"><i className="fa fa-file-pdf"></i>  PDF</button>
+          <button type="button" className="btn btn-warning" id="pdfButton" onClick={(e)=>{generatePDF(staff)}}><i className="fa fa-file-pdf"></i>  PDF</button>
           <form className="d-flex">
 
-            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" 
-            onChange={e => { setsearch(e.target.value) }}/>
+            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+              onChange={e => { setsearch(e.target.value) }} />
 
           </form>
         </div>
