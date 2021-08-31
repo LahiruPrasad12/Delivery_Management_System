@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import "../Home.css"
 import axios from 'axios';
 import SoloAlert from 'soloalert'
+import validation from 'validator'
+
 
 export default function AddDeliveryBoy() {
 
@@ -20,6 +22,27 @@ export default function AddDeliveryBoy() {
         try {
             e.preventDefault();
 
+            if(!Id || !fName || !lName || !mobile || !mail || !NIC){
+                SoloAlert.alert({
+                    title: "Oops!",
+                    body: "Please fill all field",
+                    icon: "warning",
+                    theme: "dark",
+                    useTransparency: true,
+                    onOk: function () {        
+                    },     
+                  });
+            }else if(!validation.isEmail(mail)){
+                SoloAlert.alert({
+                    title: "Oops!",
+                    body: "Please enter valid mail address",
+                    icon: "warning",
+                    theme: "dark",
+                    useTransparency: true,
+                    onOk: function () {         
+                    },     
+                  });
+            }else{
             const newStaff = {
                 Id,
                 fName,
@@ -44,9 +67,9 @@ export default function AddDeliveryBoy() {
             }else{
                 alert("Something went wrong")
             }
-
+        }
         } catch (err) {
-            alert(err.message)
+            
         }
 
         setLoading(false);
