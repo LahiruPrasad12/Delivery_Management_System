@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import SoloAlert from 'soloalert'
 
 export default function ViewAllDeliveryBoys() {
 
@@ -36,11 +37,66 @@ export default function ViewAllDeliveryBoys() {
     setSelectStaff(data)
   }
 
+
   function deleteUser() {
-    alert("OK")
+    
+    SoloAlert.confirm({
+
+      title: "Confirm Delete",
+      body: "Are you sure",
+      theme: "dark",
+      useTransparency: true,
+      onOk: async function () {
+
+        try{
+          const result = await (await axios.delete(`http://localhost:5000/DeliveryBoy/remove/${selectStaff._id}`)).status
+          console.log(result)
+          
+          if(result===200){
+            SoloAlert.alert({
+              title: "Welcome!",
+              body: "Deletion is successful",
+              icon: "success",
+              theme: "dark",
+              useTransparency: true,
+              onOk: function () { 
+                window.location = "/viewStaff"
+              },
+              
+            });
+          }else{
+            SoloAlert.alert({
+              title: "Oops!",
+              body: "Something went wrong",
+              icon: "warning",
+              theme: "dark",
+              useTransparency: true,
+              onOk: function () { 
+               
+              },
+              
+            });       
+          }
+        }catch(err){
+          SoloAlert.alert({
+            title: "Oops!",
+            body: "Something went wrong",
+            icon: "error",
+            theme: "dark",
+            useTransparency: true,
+            onOk: function () { 
+             
+            },
+            
+          });
+        }
+      },
+      onCancel: function () { },
+
+    })
   }
 
-  function editeUser(){
+  function editeUser() {
     setStatus(false)
     setbtnStatus1(true)
     setbtnStatus2(false)
@@ -66,29 +122,29 @@ export default function ViewAllDeliveryBoys() {
             <div class="modal-body">
               <form>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.fName} readOnly={status}/>
+                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.fName} readOnly={status} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.lName} readOnly={status}/>
+                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.lName} readOnly={status} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.NIC} readOnly={status}/>
+                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.NIC} readOnly={status} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.mail} readOnly={status}/>
+                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.mail} readOnly={status} />
                 </div>
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.mobile} readOnly={status}/>
+                  <input type="text" class="form-control" id="recipient-name" value={selectStaff.mobile} readOnly={status} />
                 </div>
               </form>
             </div>
             <div class="modal-footer" hidden={btnStatus1}>
-              <button type="button" class="btn btn-primary"  onClick={(e)=>{editeUser()}}><i className="far fa-edit"></i> EDIT</button>
-              <button type="button" class="btn btn-danger"> <i class="fa fa-trash"></i> DELETE</button>
+              <button type="button" class="btn btn-primary" onClick={(e) => { editeUser() }}><i className="far fa-edit"></i> EDIT</button>
+              <button type="button" class="btn btn-danger" onClick={(e) => { deleteUser() }}> <i class="fa fa-trash"></i> DELETE</button>
             </div>
 
             <div class="modal-footer" hidden={btnStatus2}>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="button" class="btn btn-danger"><i class="fa fa-wrench"></i>  UPDATE</button>
             </div>
           </div>
@@ -119,7 +175,6 @@ export default function ViewAllDeliveryBoys() {
 
           <thead>
             <tr>
-              {/* <th scope="col">NO</th> */}
               <th scope="col">ID</th>
               <th scope="col">First Name</th>
               <th scope="col">Last Name</th>
@@ -134,7 +189,6 @@ export default function ViewAllDeliveryBoys() {
 
             {staff.map((Staff) => {
               return <tr>
-                {/* <th scope="row">{num}</th> */}
                 <td>{Staff.Id}</td>
                 <td> {Staff.fName} </td>
                 <td> {Staff.lName} </td>
@@ -142,8 +196,6 @@ export default function ViewAllDeliveryBoys() {
                 <td> {Staff.mobile} </td>
                 <td>{Staff.NIC}</td>
                 <td><Link type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" className="Edit" onClick={() => { getdata(Staff) }}> <i className="far fa-edit"></i> </Link></td>
-                {/* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"><i className="far fa-edit"></i> </button> */}
-
               </tr>
 
             })}
