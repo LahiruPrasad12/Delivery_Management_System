@@ -22,6 +22,8 @@ export default function ViewAllDeliveryBoys() {
   const [Id, setID] = useState("");
   const [isLoading, setLoading] = useState(false);
 
+  const [search, setsearch] = useState("");
+  const [filtered, setfiltered] = useState([]);
   //This function used to get all users
   useEffect(() => {
 
@@ -36,6 +38,18 @@ export default function ViewAllDeliveryBoys() {
     getAgent();
 
   })
+
+
+
+  useEffect(() => { //search funtion
+    setfiltered(
+      //filtering the inventory array to only contain objects that match with the seach term and save in the FILTERED useState 
+      staff.filter(items => {
+        return items.fName.toLowerCase().includes(search.toLowerCase())
+          || items.NIC.toLowerCase().includes(search.toLowerCase())
+      })
+    )
+  }, [search, staff])
 
 
 
@@ -235,7 +249,8 @@ export default function ViewAllDeliveryBoys() {
           <button type="button" className="btn btn-warning" id="pdfButton"><i className="fa fa-file-pdf"></i>  PDF</button>
           <form className="d-flex">
 
-            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" 
+            onChange={e => { setsearch(e.target.value) }}/>
 
           </form>
         </div>
@@ -260,7 +275,7 @@ export default function ViewAllDeliveryBoys() {
           </thead>
           <tbody>
 
-            {staff.map((Staff) => {
+            {filtered.slice(0).reverse().map((Staff) => {
               return <tr>
                 <td>{Staff.Id}</td>
                 <td> {Staff.fName} </td>
