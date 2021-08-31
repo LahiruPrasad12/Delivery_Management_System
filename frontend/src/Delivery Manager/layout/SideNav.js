@@ -7,8 +7,8 @@ export default function SideNav() {
         <div>
 
             <div class="sidebar">
-                <a href="/delivery">ADD STAFF</a>
-                <a href="#services">VIEW STAFF</a>
+                <a href="/addStaff">ADD STAFF</a>
+                <a href="/viewStaff">VIEW STAFF</a>
                 <a href="#clients"> ADD VEHICLES</a>
                 <a href="#contact"> VIEW VEHICLES</a>
             </div>

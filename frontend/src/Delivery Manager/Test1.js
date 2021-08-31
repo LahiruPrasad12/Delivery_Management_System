@@ -19,7 +19,7 @@ export default function Test1() {
     }
 
     return (
-        <div>
+        <div className="content">
             <h1>Home</h1>
             <button onClick={onClick}>Click me</button>
             <button onClick={onClick2}>Click me2</button>

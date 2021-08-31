@@ -1,4 +1,8 @@
 /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+body{
+  background-color: rgb(255, 255, 255);
+}
+
 div.content {
     margin-top: 40px;
     margin-left: 230px;
@@ -38,6 +42,15 @@ div.content {
     color: black;
   }
 
+
   #button{
-    margin-left: 72%;
+    margin-left: 71%;
+  }
+  
+.bodyContent{
+  margin-top: 3%;
+}
+  #pdfButton{
+    margin-left: 38%;
+    width: 100px;
   }
