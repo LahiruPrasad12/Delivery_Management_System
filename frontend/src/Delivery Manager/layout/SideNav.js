@@ -1,5 +1,6 @@
 import React from 'react'
 import "./SideNav.css"
+import { Link } from 'react-router-dom';
 
 export default function SideNav() {
     return (
@@ -7,10 +8,10 @@ export default function SideNav() {
         <div>
 
             <div class="sidebar">
-                <a href="/addStaff">ADD STAFF</a>
-                <a href="/viewStaff">VIEW STAFF</a>
-                <a href="#clients"> ADD VEHICLES</a>
-                <a href="#contact"> VIEW VEHICLES</a>
+                <Link to="/addStaff">ADD STAFF</Link>
+                <Link to="/viewStaff">VIEW STAFF</Link>
+                <Link to="/addVehicle"> ADD VEHICLES</Link>
+                <Link to="/viewVehicles"> VIEW VEHICLES</Link>
             </div>
 
 
