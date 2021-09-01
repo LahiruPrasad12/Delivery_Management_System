@@ -27,13 +27,19 @@ export default function ViewAllDeliveryBoys() {
   const [filtered, setfiltered] = useState([]);
 
 
+  const [loaderStatus, setLoaderStatus] = useState(false);
+  const [tableStatus, setTablestatus] = useState(true);
+
   //This useEffect function used to get all user's data
   useEffect(() => {
 
     async function getStaff() {
+
       try {
         const result = await (await axios.get("http://localhost:5000/DeliveryBoy/view")).data.data
         setStaff(result);
+        setTablestatus(false)
+        setLoaderStatus(true)
       } catch (err) {
         console.log(err.message)
       }
@@ -53,6 +59,8 @@ export default function ViewAllDeliveryBoys() {
           || items.NIC.toLowerCase().includes(search.toLowerCase())
       })
     )
+
+
   }, [search, staff])
 
 
@@ -179,7 +187,7 @@ export default function ViewAllDeliveryBoys() {
       }
 
     } catch (err) {
-      
+
     }
     setLoading(false);
   }
@@ -195,22 +203,22 @@ export default function ViewAllDeliveryBoys() {
 
 
   //This function used to generate a pdf
-  function generatePDF(tickets){
+  function generatePDF(tickets) {
 
     const doc = new jspdf();
-    const tableColumn = ["User ID","First Name", "Last Name", "Mail Address", "Mobile Number", "NIC"];
+    const tableColumn = ["User ID", "First Name", "Last Name", "Mail Address", "Mobile Number", "NIC"];
     const tableRows = [];
 
     tickets.slice(0).reverse().map(ticket => {
-        const ticketData = [
-            ticket.Id,
-            ticket.fName,
-            ticket.lName,
-            ticket.mail,
-            ticket.mobile,
-            ticket.NIC,
-        ];
-        tableRows.push(ticketData);
+      const ticketData = [
+        ticket.Id,
+        ticket.fName,
+        ticket.lName,
+        ticket.mail,
+        ticket.mobile,
+        ticket.NIC,
+      ];
+      tableRows.push(ticketData);
     });
 
     doc.autoTable(tableColumn, tableRows, { styles: { fontSize: 8 }, startY: 35 });
@@ -227,6 +235,14 @@ export default function ViewAllDeliveryBoys() {
 
   return (
     <div className="content ">
+
+      {/* this part used to display page loader */}
+      <div class="d-flex justify-content-center">
+        <div class="spinner-grow text-danger" style={{width: "10rem", height: "10rem",  marginTop:"100px"}} role="status" hidden={loaderStatus}>
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>{/* End of the loader */}
+
 
 
       {/* This function used to view one user data in pop box */}
@@ -280,13 +296,12 @@ export default function ViewAllDeliveryBoys() {
 
 
 
-
-
-      {/* This part used to get all users data into table */}
-      <nav className="navbar bg-white">
+     {/* This part used to get all users data into table */}
+    <div hidden={tableStatus}>
+      <nav className="navbar bg-white" >
         <div className="container-fluid">
           <h3>VIEW-DELIVERY-BOYS</h3>
-          <button type="button" className="btn btn-warning" id="pdfButton" onClick={(e)=>{generatePDF(staff)}}><i className="fa fa-file-pdf"></i>  PDF</button>
+          <button type="button" className="btn btn-warning" id="pdfButton" onClick={(e) => { generatePDF(staff) }}><i className="fa fa-file-pdf"></i>  PDF</button>
           <form className="d-flex">
 
             <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
@@ -332,7 +347,7 @@ export default function ViewAllDeliveryBoys() {
 
       </div>
       {/* End of the all users data get part */}
-
+      </div>
     </div>
   )
 }
