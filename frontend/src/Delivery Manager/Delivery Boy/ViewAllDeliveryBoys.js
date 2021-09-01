@@ -193,7 +193,7 @@ export default function ViewAllDeliveryBoys() {
   }
 
 
-  //This method used to edit user details
+    //This method will remove disable tag in input fields
   function editeUser() {
     setStatus(false)
     setbtnStatus1(true)

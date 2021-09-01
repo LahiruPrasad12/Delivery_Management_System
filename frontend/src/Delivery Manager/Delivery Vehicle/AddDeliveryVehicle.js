@@ -15,56 +15,79 @@ export default function AddDeliveryVehicle() {
 
 
    async function sendData(e){
-        setLoading(true);
+    setLoading(true);
 
-        try{
-            e.preventDefault();
+    try {
+        e.preventDefault();
 
-            if(!vehicle_number || !owner_name || !owner_contactNumber || !owner_NIC || !owner_mail){
-                SoloAlert.alert({
-                    title: "Oops!",
-                    body: "Please fill all field",
-                    icon: "warning",
-                    theme: "dark",
-                    useTransparency: true,
-                    onOk: function () {        
-                    },     
-                  });
-            }else if(!validation.isEmail(owner_mail)){
-                SoloAlert.alert({
-                    title: "Oops!",
-                    body: "Please enter valid mail address",
-                    icon: "warning",
-                    theme: "dark",
-                    useTransparency: true,
-                    onOk: function () {         
-                    },     
-                  });
-            }else{
-            const newVehicle = {
-                vehicle_number, owner_name, owner_contactNumber, owner_NIC ,owner_mail
-            }
-
-            const data = await axios.post("http://localhost:5000/vehicle/add", newVehicle)
-            console.log(data)
-            if (data.status === 200) {
-                SoloAlert.alert({
-                    title: "Welcome!",
-                    body: "User added successfully",
-                    icon: "success",
-                    theme: "dark",
-                    useTransparency: true,
-                    onOk: function () {
-                      window.location = "/viewVehicles"
-                    },
-                  });
-            }else{
-                alert("Something went wrong")
-            }
+        if(!vehicle_number || !owner_name || !owner_contactNumber || !owner_NIC || !owner_mail){
+            SoloAlert.alert({
+                title: "Oops!",
+                body: "Please fill all field",
+                icon: "warning",
+                theme: "dark",
+                useTransparency: true,
+                onOk: function () {        
+                },     
+              });
+        }else if(!validation.isEmail(owner_mail)){
+            SoloAlert.alert({
+                title: "Oops!",
+                body: "Please enter valid mail address",
+                icon: "warning",
+                theme: "dark",
+                useTransparency: true,
+                onOk: function () {   
+                    console.log(owner_contactNumber.length)      
+                },     
+              });
+        }else if(owner_contactNumber.length !== 10 ){
+            SoloAlert.alert({
+                title: "Oops!",
+                body: "Please enter valid phone number",
+                icon: "warning",
+                theme: "dark",
+                useTransparency: true,
+                onOk: function () {         
+                },     
+              });
         }
-        }catch(err){
-
+        
+        else{
+        const newStaff = {
+            vehicle_number, owner_name, owner_contactNumber, owner_NIC ,owner_mail
         }
+
+        const data = await axios.post("http://localhost:5000/vehicle/add", newStaff)
+        if (data.status === 200) {
+            SoloAlert.alert({
+                title: "Welcome!",
+                body: "User added successfully",
+                icon: "success",
+                theme: "dark",
+                useTransparency: true,
+                onOk: function () {
+                  window.location = "/viewVehicles"
+                },
+              });
+        }else{
+            alert("Something went wrong")
+        }
+    }
+    } catch (err) {
+        SoloAlert.alert({
+            title: "Oops!",
+            body: "Please enter valid phone number",
+            icon: "warning",
+            theme: "dark",
+            useTransparency: true,
+            onOk: function () {         
+            },     
+          });
+        
+    }
+
+    setLoading(false);
     }
 
 

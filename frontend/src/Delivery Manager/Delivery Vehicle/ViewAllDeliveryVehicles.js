@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import jspdf from 'jspdf'
 import "jspdf-autotable"
+import validation from 'validator'
+import SoloAlert from 'soloalert'
 
 
 export default function ViewAllDeliveryVehicles() {
@@ -57,7 +59,7 @@ export default function ViewAllDeliveryVehicles() {
 
 
   //This function used to get specific user data
-  function getdata(data) {
+  function getOneVehicleData(data) {
     setbtnStatus1(false)
     setbtnStatus2(true)
     setStatus(true)
@@ -71,17 +73,146 @@ export default function ViewAllDeliveryVehicles() {
 
 
 
-  function editeUser() {
+  //This method will remove disable tag in input fields
+  function editVehicle() {
+    setStatus(false)
+    setbtnStatus1(true)
+    setbtnStatus2(false)
+  }
+
+
+
+
+  function deleteVehicle() {
+    
+    SoloAlert.confirm({
+
+      title: "Confirm Delete",
+      body: "Are you sure",
+      theme: "dark",
+      useTransparency: true,
+      onOk: async function () {
+
+        try {
+          const result = await (await axios.delete(`http://localhost:5000/vehicle/remove/${selectVehicle._id}`)).status
+          console.log(result)
+
+          if (result === 200) {
+            SoloAlert.alert({
+              title: "Welcome!",
+              body: "Deletion is successful",
+              icon: "success",
+              theme: "dark",
+              useTransparency: true,
+              onOk: function () {
+                window.location = "/viewStaff"
+              },
+
+            });
+          }
+        } catch (err) {
+          SoloAlert.alert({
+            title: "Oops!",
+            body: "Something went wrong",
+            icon: "error",
+            theme: "dark",
+            useTransparency: true,
+            onOk: function () {
+
+            },
+
+          });
+        }
+      },
+      onCancel: function () {
+        SoloAlert.alert({
+          title: "Oops!",
+          body: "You canceled delete request",
+          icon: "warning",
+          theme: "dark",
+          useTransparency: true,
+          onOk: function () {
+
+          },
+
+        });
+      },
+
+    })
 
   }
 
-  function deleteUser() {
 
-  }
 
-  function updateUser() {
 
-  }
+  //This function used to update vehicle details
+ async function updateVehicle() {
+    setLoading(true);
+    try {
+      const updatedVehicle = {
+        vehicle_number, owner_name, owner_contactNumber, owner_NIC ,owner_mail
+      }
+
+      if (!validation.isEmail(owner_mail)) {
+        SoloAlert.alert({
+          title: "Oops!",
+          body: "Please enter valid mail address",
+          icon: "warning",
+          theme: "dark",
+          useTransparency: true,
+          onOk: function () {
+
+          },
+
+        });
+      }else if(owner_contactNumber.length !== 10 ){
+        SoloAlert.alert({
+          title: "Oops!",
+          body: "Please enter valid phone number",
+          icon: "warning",
+          theme: "dark",
+          useTransparency: true,
+          onOk: function () {         
+          },     
+        });
+      }
+      
+      else {
+        const result = await (await axios.put(`http://localhost:5000/vehicle/update/${selectVehicle._id}`, updatedVehicle)).status;
+
+        if (result === 200) {
+          SoloAlert.alert({
+            title: "Welcome!",
+            body: "Vehicle updated successfully",
+            icon: "success",
+            theme: "dark",
+            useTransparency: true,
+            onOk: function () {
+              window.location = "/viewVehicles"
+            },
+          });
+        }
+      }
+
+    } catch (err) {
+      SoloAlert.alert({
+        title: "Oops!",
+        body: "Please enter valid phone number",
+        icon: "warning",
+        theme: "dark",
+        useTransparency: true,
+        onOk: function () {         
+        },     
+      });
+
+    }
+    setLoading(false);
+  }//End of update method
+
+
+
+
+
 
   //This function used to generate a pdf
   function generatePDF(tickets) {
@@ -131,7 +262,7 @@ export default function ViewAllDeliveryVehicles() {
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Vehicle Number - {selectVehicle.Id}</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Vehicle Number - {selectVehicle.vehicle_number}</h5>
 
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -158,13 +289,13 @@ export default function ViewAllDeliveryVehicles() {
               </form>
             </div>
             <div class="modal-footer" hidden={btnStatus1}>
-              <button type="button" class="btn btn-primary" onClick={(e) => { editeUser() }}><i className="far fa-edit"></i> EDIT</button>
-              <button type="button" class="btn btn-danger" onClick={(e) => { deleteUser() }}> <i class="fa fa-trash"></i> DELETE</button>
+              <button type="button" class="btn btn-primary" onClick={(e) => { editVehicle() }}><i className="far fa-edit"></i> EDIT</button>
+              <button type="button" class="btn btn-danger" onClick={(e) => { deleteVehicle() }}> <i class="fa fa-trash"></i> DELETE</button>
             </div>
 
             <div class="modal-footer" hidden={btnStatus2}>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger" onClick={(e) => { updateUser() }}
+              <button type="button" class="btn btn-danger" onClick={(e) => { updateVehicle() }}
                 disabled={isLoading} ><i class="fa fa-wrench"></i>  {isLoading ? 'Updating..' : 'UPDATE'}</button>
             </div>
           </div>
@@ -214,7 +345,7 @@ export default function ViewAllDeliveryVehicles() {
                   <td> {vehicle.owner_contactNumber} </td>
                   <td> {vehicle.owner_NIC} </td>
                   <td> {vehicle.owner_mail} </td>
-                  <td><Link type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" className="Edit" onClick={() => { getdata(vehicle) }}> <i className="far fa-edit"></i> </Link></td>
+                  <td><Link type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" className="Edit" onClick={() => { getOneVehicleData(vehicle) }}> <i className="far fa-edit"></i> </Link></td>
                 </tr>
 
               })}
