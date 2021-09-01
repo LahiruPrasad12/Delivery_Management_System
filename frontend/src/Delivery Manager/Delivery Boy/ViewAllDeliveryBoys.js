@@ -35,7 +35,7 @@ export default function ViewAllDeliveryBoys() {
         const result = await (await axios.get("http://localhost:5000/DeliveryBoy/view")).data.data
         setStaff(result);
       } catch (err) {
-  
+        console.log(err.message)
       }
     }
     getStaff();
