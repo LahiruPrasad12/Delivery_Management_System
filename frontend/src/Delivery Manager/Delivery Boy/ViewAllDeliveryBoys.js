@@ -14,7 +14,6 @@ export default function ViewAllDeliveryBoys() {
   const [status, setStatus] = useState(true);
   const [btnStatus1, setbtnStatus1] = useState(false)
   const [btnStatus2, setbtnStatus2] = useState(true)
-  const [updateBTnStatus, setupdateBTnStatus] = useState(true)
 
   const [fName, setFname] = useState("");
   const [lName, setLname] = useState("");
@@ -36,7 +35,7 @@ export default function ViewAllDeliveryBoys() {
         const result = await (await axios.get("http://localhost:5000/DeliveryBoy/view")).data.data
         setStaff(result);
       } catch (err) {
-        alert(err)
+  
       }
     }
     getStaff();
@@ -180,7 +179,7 @@ export default function ViewAllDeliveryBoys() {
       }
 
     } catch (err) {
-      alert(err.message)
+      
     }
     setLoading(false);
   }
@@ -218,7 +217,7 @@ export default function ViewAllDeliveryBoys() {
     const date = Date().split(" ");
     const dateStr = date[1] + "-" + date[2] + "-" + date[3];
     doc.text("Delivery-Staff-Report", 14, 15).setFontSize(12);
-    doc.text(`Report Genarated Date - ${dateStr} `, 14, 23);
+    doc.text(`Report Generated Date - ${dateStr} `, 14, 23);
     doc.save(`Delivery-Staff-Report_${dateStr}.pdf`);
 
   }
